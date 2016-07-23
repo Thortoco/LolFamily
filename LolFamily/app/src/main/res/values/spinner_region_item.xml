@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="region_server">
+        <item>EUW</item>
+        <item>NA</item>
+        <item>KR</item>
+        <item>BR</item>
+        <item>TR</item>
+        <item>OCE</item>
+        <item>EUNE</item>
+        <item>RU</item>
+        <item>JP</item>
+        <item>LAN</item>
+        <item>LAS</item>
+    </string-array>
+</resources>

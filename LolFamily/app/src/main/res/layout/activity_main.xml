@@ -65,4 +65,11 @@
         android:textColor="@color/white"
         android:textSize="12sp"
         android:theme="@style/customButtonLogin" />
+       <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:text="@string/term_and_conditions"
+        android:textSize="8sp" />
 </LinearLayout>

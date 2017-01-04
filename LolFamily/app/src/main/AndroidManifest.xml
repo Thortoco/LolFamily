@@ -13,7 +13,7 @@
         android:windowSoftInputMode="stateHidden">
         <meta-data
             android:name="corentin.lol.api.API_KEY"
-            android:value="6a9b7695-e831-4bbe-9366-2fcb9af3512e" />
+            android:value="REPLACE_WITH_YOUR_API_KEY" />
 
         <activity android:name=".View.MainActivity">
             <intent-filter>
@@ -22,8 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".View.ProfilActivity"
-                android:label="@string/summoner"></activity>
+        <activity
+            android:name=".View.ProfilActivity"
+            android:label="@string/summoner"></activity>
     </application>
 
 </manifest>

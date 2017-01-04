@@ -1,9 +1,15 @@
 <resources>
     <string name="app_name">Lol Family</string>
-    <string name="search_summoners_name">Enter the summoner\'s name</string>
+    <string name="server">Server: </string>
+    <string name="search_summoners_name">Summoner\'s name</string>
     <string name="Find">Find</string>
     <string name="summoner">Summoner</string>
-
+    <string name="ranked_solo">Ranked Solo/Duo</string>
+    <string name="ranked_flex">Ranked Flex 5X5</string>
+    <string name="unranked_title">Unranked</string>
+    <string name="stats">Average stats</string>
+    <string name="ranked_title">Solo/Dynamic</string>
+    <string name="most_played">Most played</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

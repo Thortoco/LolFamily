@@ -14,10 +14,10 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import corentin_evanno.lolfamily.Fragment.ChampionsFragment;
 import corentin_evanno.lolfamily.Fragment.MatchHistoryFragment;
 import corentin_evanno.lolfamily.Fragment.SummaryFragment;
 import corentin_evanno.lolfamily.R;
-import corentin_evanno.lolfamily.View.MainActivity;
 import corentin_evanno.lolfamily.model.Summoner;
 
 public class ProfilActivity extends AppCompatActivity {
@@ -33,21 +33,12 @@ public class ProfilActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
+        actionBar.setElevation(0);
         if (getIntent().getSerializableExtra("Summoner") != null) {
             this.summoner = (Summoner) getIntent().getSerializableExtra("Summoner");
             actionBar.setTitle(summoner.getName());
-            System.out.println("ProfilActivity = ");
-            System.out.println("{Name = \"" + this.summoner.getName() + "\",");
-            System.out.println("Id = \"" + this.summoner.getId() + "\",");
-            System.out.println("ProfileIconId = \"" + this.summoner.getProfileIconId() + "\",");
-            System.out.println("RevisionDate = \"" + this.summoner.getRevisionDate() + "\",");
-            System.out.println("SumonnerLevel = \"" + this.summoner.getSummonerLevel() + "\"}");
-            /*TextView editText = (TextView) findViewById(R.id.test);
-            editText.setText(this.summoner.getName() + "/" + this.summoner.getId() + "/" + this.summoner.getSummonerLevel());*/
             viewPager = (ViewPager) findViewById(R.id.viewpager);
             setupViewPager(viewPager);
-
             tabLayout = (TabLayout) findViewById(R.id.tabs);
             tabLayout.setupWithViewPager(viewPager);
         }}
@@ -57,7 +48,7 @@ public class ProfilActivity extends AppCompatActivity {
         adapter.setSummoner(summoner);
         adapter.addFragment(new SummaryFragment(), "SUMMARY");
         adapter.addFragment(new MatchHistoryFragment(), "MATCH HISTORY");
-        //adapter.addFragment(new ThreeFragment(), "THREE");
+        adapter.addFragment(new MatchHistoryFragment(), "CHAMPIONS");
         viewPager.setAdapter(adapter);
     }
 
@@ -81,10 +72,20 @@ public class ProfilActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("Summoner", summoner);
                     SummaryFragment summaryFragment = new SummaryFragment();
-
                     summaryFragment.setArguments(bundle);
-
                     return summaryFragment;
+                case 1:
+                    Bundle bundleHistory = new Bundle();
+                    bundleHistory.putSerializable("Summoner", summoner);
+                    MatchHistoryFragment historyFragment = new MatchHistoryFragment();
+                    historyFragment.setArguments(bundleHistory);
+                    return historyFragment;
+                case 2:
+                    Bundle bundleChampions = new Bundle();
+                    bundleChampions.putSerializable("Summoner", summoner);
+                    ChampionsFragment championsFragment = new ChampionsFragment();
+                    championsFragment.setArguments(bundleChampions);
+                    return championsFragment;
             }
             return mFragmentList.get(position);
         }

@@ -11,20 +11,23 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+
 import corentin_evanno.lolfamily.API.ApiManager;
+import corentin_evanno.lolfamily.API.StaticDataAPI;
 import corentin_evanno.lolfamily.R;
 import corentin_evanno.lolfamily.model.Summoner;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
     EditText inputSummonerName;
     Spinner regionServer;
+    Button searchSummoner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,28 +35,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         inputSummonerName = (EditText) findViewById(R.id.summoners_name);
-        Button searchSummoner = (Button) findViewById(R.id.search_summoner);
+        searchSummoner = (Button) findViewById(R.id.search_summoner);
 
         regionServer = (Spinner) findViewById(R.id.server_region);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.region_server, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         regionServer.setAdapter(adapter);
-
         ApiManager.init(this.getApplicationContext());
+        ApiManager.setSummonerName("");
+        StaticDataAPI.getInstance();
         searchSummoner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//hide keyboard on click
                 hideKeyBoard();
-               /* InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);*/
-
-
                 String summonerName = inputSummonerName.getText().toString().trim();
                 if (summonerName.isEmpty()) {
-                   showSnackBar("You must type a summoner's name");
+                    showSnackBar("You must type a summoner's name");
                 } else {
+                    searchSummoner.setEnabled(false);
                     String server = regionServer.getSelectedItem().toString().toLowerCase();
                     getSummonersByName(summonerName, server);
                 }
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void hideKeyBoard() {
-        RelativeLayout coordinatorLayout = (RelativeLayout) findViewById(R.id.coordinator_layout);
+        LinearLayout coordinatorLayout = (LinearLayout) findViewById(R.id.coordinator_layout);
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(coordinatorLayout.getWindowToken(), 0);
     }
@@ -79,48 +79,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void showSnackBar(String message) {
-        RelativeLayout coordinatorLayout = (RelativeLayout) findViewById(R.id.coordinator_layout);
+        LinearLayout coordinatorLayout = (LinearLayout) findViewById(R.id.coordinator_layout);
         Snackbar snackbar = Snackbar
                 .make(coordinatorLayout, message, Snackbar.LENGTH_LONG);
         snackbar.show();
     }
 
-    public void getSummonersByName(String summonerName, String server) {
-
-        summonerName = summonerName.replaceAll("\\s","");
-        //Retrofit section start from here...
-        ApiManager.setRegion(server);
+    public void getSummonersByName(String summonerName, final String server) {
+        summonerName = summonerName.replaceAll("\\s", "");
         ApiManager.setSummonerName(summonerName);
-        //System.out.println("Summoner name = " + summonerName);
-        ApiManager.get().getSummonerByName(server, summonerName, ApiManager.getApiKey()).subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Summoner>() {
-                    @Override
-                    public final void onCompleted() {
-                        // do nothing
-                    }
+        String url = "https://" + server + ".api.pvp.net/api/lol/" + server + "/v1.4/summoner/by-name/" + summonerName;
 
-                    @Override
-                    public final void onError(Throwable e) {
-                        if(e.getMessage().equals("404 Not Found")) {
-                            showSnackBar("The summoner doesn't exist");
-                        }
+        ApiManager.get().getSummonerByName(url, ApiManager.getApiKey()).enqueue(new Callback<Summoner>() {
+            @Override
+            public void onResponse(Call<Summoner> call, Response<Summoner> response) {
+                if (response.isSuccessful()) {
+                    ApiManager.setRegion(server);
+                    Intent mIntent = new Intent(getApplicationContext(), ProfilActivity.class);
+                    Summoner summoner = response.body();
+                    mIntent.putExtra("Summoner", summoner);
+                    startActivity(mIntent);
+                } else {
+                    searchSummoner.setEnabled(true);
+                    showSnackBar("Summoner doesn't exist");
+                }
+            }
 
-                    }
-
-                    @Override
-                    public final void onNext(Summoner response) {
-                        /*System.out.println("Response = ");
-                        System.out.println("{Name = \"" + response.getName() + "\",");
-                        System.out.println("Id = \"" + response.getId() + "\",");
-                        System.out.println("ProfileIconId = \"" + response.getProfileIconId() + "\",");
-                        System.out.println("RevisionDate = \"" + response.getRevisionDate() + "\",");
-                        System.out.println("SumonnerLevel = \"" + response.getSummonerLevel() + "\"}");*/
-                        Intent mIntent = new Intent(getApplicationContext(), ProfilActivity.class);
-                        mIntent.putExtra("Summoner", response);
-                        startActivity(mIntent);
-                    }
-                });
-
+            @Override
+            public void onFailure(Call<Summoner> call, Throwable t) {
+                searchSummoner.setEnabled(true);
+                System.out.println("[Failure] getSummonersByName : " + t.getMessage());
+                showSnackBar("Network problem");
+            }
+        });
     }
 }

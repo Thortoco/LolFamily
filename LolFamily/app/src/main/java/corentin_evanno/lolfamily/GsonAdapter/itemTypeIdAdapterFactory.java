@@ -14,11 +14,11 @@ import org.json.JSONArray;
 
 import java.io.IOException;
 
-public class ItemTypeAdapterFactory implements TypeAdapterFactory {
-    String name;
+public class itemTypeIdAdapterFactory implements TypeAdapterFactory {
+    String id;
 
-    public ItemTypeAdapterFactory(String name) {
-        this.name = name;
+    public itemTypeIdAdapterFactory(String id) {
+        this.id = id;
     }
 
     public <T> TypeAdapter<T> create(Gson gson, final TypeToken<T> type) {
@@ -38,9 +38,8 @@ public class ItemTypeAdapterFactory implements TypeAdapterFactory {
                 JsonElement jsonElement = elementAdapter.read(in);
                 if (jsonElement.isJsonObject()) {
                     JsonObject jsonObject = jsonElement.getAsJsonObject();
-                    if (jsonObject.has(name) && jsonObject.get(name).isJsonObject())
-                    {
-                        jsonElement = jsonObject.get(name);
+                    if (jsonObject.has(id) && jsonObject.get(id).isJsonArray()) {
+                        jsonElement = jsonObject.get(id);
                     }
                 }
                 return delegate.fromJsonTree(jsonElement);
@@ -48,3 +47,4 @@ public class ItemTypeAdapterFactory implements TypeAdapterFactory {
         }.nullSafe();
     }
 }
+

@@ -30,7 +30,9 @@ If you want to use the code to build the application in your IDE such as Android
  - Add possibility of having favorite users
  - Add Display more matches
  - Add Display more champions statistics
+ 
 ### Thanks
 I would like to thanks Guillaume, Maxence and Redouane for their feedbacks during the beta process.
+
 ### Disclaimer
 LolFamily isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.

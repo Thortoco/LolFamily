@@ -2,7 +2,8 @@
 
 ### Project
 Personnal Android project of Corentin EVANNO using RiotGames API.
-This application use Retrofit and Picasso from http://square.github.io/
+This application use Retrofit and Picasso from http://square.github.io/.
+
 You need at least Android Kitkat (4.4) to run the application.
 ### Features
 The goal of LolFamily is to allow users to browse summoners profile from different region, their last 10 matches and their best champions in ranked.

@@ -26,6 +26,10 @@ If you want to use the code to build the application in your IDE such as Android
             android:name="corentin.lol.api.API_KEY"
             android:value="REPLACE_WITH_YOUR_API_KEY" />
 ```
+### Todo
+ - Add possibility of having favorite users
+ - Add Display more matches
+ - Add Display more champions statistics
 ### Thanks
 I would like to thanks Guillaume, Maxence and Redouane for their feedbacks during the beta process.
 ### Disclaimer
